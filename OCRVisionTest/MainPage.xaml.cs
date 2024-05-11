@@ -12,7 +12,7 @@ namespace OCRVisionTest
         static string subscriptionKey = "5e7857a4a3d145ecbd33b1b28b69e5d5";
         static string endpoint = "https://gasolinereceipt.cognitiveservices.azure.com/";
 
-        public string READ_TEXT_URL_IMAGE = "https://www.spailor.com/wp-content/uploads/azureai/IMG_3897.jpg";// "https://raw.githubusercontent.com/Bliitze/VIN-Pate-Image/main/1200x0.jpg";
+        public string READ_TEXT_URL_IMAGE = "https://www.spailor.com/wp-content/uploads/azureai/IMG_4435.jpg";// "https://raw.githubusercontent.com/Bliitze/VIN-Pate-Image/main/1200x0.jpg";
         public MainPage()
         {
             InitializeComponent();
@@ -87,22 +87,18 @@ namespace OCRVisionTest
 
         public ComputerVisionClient Authenticate(string endpoint, string key)
         {
-            ComputerVisionClient client =
-              new ComputerVisionClient(new ApiKeyServiceClientCredentials(key))
-              { Endpoint = endpoint };
+            ComputerVisionClient client = new ComputerVisionClient(new ApiKeyServiceClientCredentials(key)) { Endpoint = endpoint };
             return client;
         }
 
         public async Task ReadFileUrl(ComputerVisionClient client, string urlFile)//string urlFile
         {
-
-
             // Read text from URL
             var textHeaders = await client.ReadAsync(urlFile);
 
             // After the request, get the operation location (operation ID)
             string operationLocation = textHeaders.OperationLocation;
-            //Thread.Sleep(2000);
+            Thread.Sleep(2000);
 
             // Retrieve the URI where the extracted text will be stored from the Operation-Location header.
             // We only need the ID and not the full URL
@@ -116,8 +112,10 @@ namespace OCRVisionTest
             {
                 results = await client.GetReadResultAsync(Guid.Parse(operationId));
             }
-            while ((results.Status == OperationStatusCodes.Running ||
-                results.Status == OperationStatusCodes.NotStarted));
+            while
+            (
+                (results.Status == OperationStatusCodes.Running || results.Status == OperationStatusCodes.NotStarted)
+            );
 
             // Display the found text.
             // Console.WriteLine();
